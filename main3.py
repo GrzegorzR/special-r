@@ -1,6 +1,6 @@
 import sys
 from pygame.locals import *
-from lib.Rect import *
+from special_r.Rect import *
 
 
 
