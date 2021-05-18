@@ -7,13 +7,13 @@ from special_r.Rect import *
 if __name__ == '__main__':
     pygame.init()
 
-    FPS = 30
+    FPS = 60
     clock = pygame.time.Clock()
 
     DISPLAYSURF = pygame.display.set_mode((900, 900))
 
     rs = []
-    for i in range(1):
+    for i in range(10):
         x = 50. + 85 * i
         y = 450
         xp, yp = x, y - 20
@@ -32,11 +32,11 @@ if __name__ == '__main__':
 
         DISPLAYSURF.fill((92, 92, 138))
         for r in rs:
-            r.update(1)
+            r.update(20./FPS)
             r.draw(DISPLAYSURF)
         pygame.display.update()
         c += 1
-        pygame.display.update()
+        #pygame.display.update()
 
         pygame.image.save(DISPLAYSURF, "out/{}.jpeg".format(str(c).zfill(4)))
         clock.tick(FPS)
