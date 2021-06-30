@@ -2,7 +2,7 @@ import sys
 from pygame.locals import *
 
 from special_r.LoopRect import LoopRect
-from special_r.Rect import *
+from special_r.BasicRect import *
 
 if __name__ == '__main__':
     pygame.init()
@@ -18,7 +18,7 @@ if __name__ == '__main__':
     xp, yp = x, y - 20.
     rs = []
     for i in range(1,20):
-        rs.append(LoopRect(x, y, xp, yp, 20., 60., math.pi,  i/2., color=(0, 55, i*10)))
+        rs.append(LoopRect(x, y, xp, yp, 20., 60., math.pi, i / 2., color=(0, 55, i * 10)))
 
     c, unpin_n = 1, 0
     while True:

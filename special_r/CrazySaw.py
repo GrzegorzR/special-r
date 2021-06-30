@@ -2,13 +2,13 @@ import sys
 from math import pi, sin, cos
 from pygame.locals import *
 
-from special_r.Rect import *
-from special_r.Rect import Rect
+from special_r.BasicRect import *
+from special_r.BasicRect import BasicRect
 
 from special_r.utils.colorsets import basic_custom_mechanical_keybors_gone_wrong as colorset
 
 
-class CrazySaw(Rect):
+class CrazySaw(BasicRect):
     def __init__(self, x, y, w, h, r, ax, v_val, color=(255,0,0)):
         super().__init__(x, y, x, y, w, h, r, color)
         self.p0 = np.array([x, y])
@@ -37,9 +37,9 @@ class CrazySaw(Rect):
     def update_rotation(self, ts):
         # self.vr += self.ar * ts
         # self.vr *= self.rotation_fraction
-        dist = abs(self.a[0])
-        self.vr = dist * 0.1 + 0.5
-        self.color = (93 , 183-int(self.vr * 100)*2, 222-int(self.vr * 100)*2)
+        dist = (abs(self.a[0]) +abs(self.a[1]))
+        self.vr = dist*dist * 0.1 + 0.5
+        self.color = (200 , 100, int(self.vr*150)%255)
         #self.color = (int(self.vr * 100), 50, 150)
         #print(self.color)
         dr = round(self.vr * ts, 5)
@@ -79,10 +79,10 @@ if __name__ == '__main__':
     for i in np.arange(0, 2. * pi, pi / 8):
         ax_x = sin(i)
         ax_y = cos(i)
-        rs.append(CrazySaw(x, y, 20. , 60. , i , [ax_x, ax_y], 20))
+        rs.append(CrazySaw(x, y, 20. , 60. , sin(i)/pi , [ax_x, ax_y], 20))
 
     c, unpin_n = 1, 0
-    while c<=106:
+    while True:
         # print(c, r.vr, math.sin(r.r), math.cos(r.r), r.r)
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -91,10 +91,10 @@ if __name__ == '__main__':
 
         DISPLAYSURF.fill(colorset['background'])
         for r in rs:
-            r.update(0.3)
+            r.update(0.4)
             r.draw(DISPLAYSURF)
         pygame.display.update()
         c += 1
-        pygame.image.save(DISPLAYSURF, "gif_1/{}.png".format(str(c).zfill(4)))
+        pygame.image.save(DISPLAYSURF, "gif_3/{}.jpg".format(str(c).zfill(4)))
 
         clock.tick(FPS)

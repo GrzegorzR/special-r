@@ -2,8 +2,8 @@ import copy
 import sys
 from pygame.locals import *
 
-from special_r.Rect import *
-from special_r.Rect import Rect
+from special_r.BasicRect import *
+from special_r.BasicRect import BasicRect
 
 
 
@@ -88,7 +88,7 @@ def sim_1():
     rs = []
     x, y = 400., 300.
     xp, yp = x, y - 20.
-    r = Rect(x, y, xp, yp, 20., 60., math.pi, (0, 55, 255))
+    r = BasicRect(x, y, xp, yp, 20., 60., math.pi, (0, 55, 255))
     c, unpin_n = 1, 0
     while True:
         # print(c, r.vr, math.sin(r.r), math.cos(r.r))
@@ -131,7 +131,7 @@ def sim_2():
     DISPLAYSURF = pygame.display.set_mode((900, 900))
     x, y = 400., 300.
     xp, yp = x, y - 20.
-    r = Rect(x, y, xp, yp, 20., 60., math.pi, (0, 55, 255))
+    r = BasicRect(x, y, xp, yp, 20., 60., math.pi, (0, 55, 255))
 
 
     simulator = SimulatorPin(r, update_rate=20. / FPS)

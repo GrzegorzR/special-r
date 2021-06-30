@@ -1,8 +1,8 @@
 from math import isclose, sin, cos, pi
-from special_r.Rect import Rect
+from special_r.BasicRect import BasicRect
 
 
-class LoopRect(Rect):
+class LoopRect(BasicRect):
     def __init__(self, x, y, xp, yp, w, h, r, target_r, color=(0, 55, 255)):
         super().__init__(x, y, xp, yp, w, h, r, color=color)
         self.target_r = target_r

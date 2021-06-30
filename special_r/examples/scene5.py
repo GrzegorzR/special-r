@@ -1,6 +1,6 @@
 import sys
 from pygame.locals import *
-from special_r.Rect import *
+from special_r.BasicRect import *
 
 if __name__ == '__main__':
     pygame.init()
@@ -14,7 +14,7 @@ if __name__ == '__main__':
     rs = []
     x, y = 400., 300.
     xp, yp = x, y - 20.
-    r = Rect(x, y, xp, yp, 20., 60., math.pi, (0, 55, 255))
+    r = BasicRect(x, y, xp, yp, 20., 60., math.pi, (0, 55, 255))
 
     c, unpin_n = 1, 0
     while True:

@@ -1,8 +1,7 @@
 import sys
 from pygame.locals import *
-from special_r.Rect import *
-
-
+from special_r.BasicRect import *
+from special_r.PinRect import PinRect
 
 if __name__ == '__main__':
     pygame.init()
@@ -18,7 +17,7 @@ if __name__ == '__main__':
         y = 450
         xp, yp = x, y - 20
         w, h = 20, 60
-        rs.append(Rect(x, y, xp, yp, w, h, i * 20., (0, i * 20 % 255, 255)))
+        rs.append(PinRect(x, y, w, h, xp, yp,  i * 20., color=(0, i * 20 % 255, 255)))
     c, unpin_n = 1, 0
     while True:
         for event in pygame.event.get():
@@ -30,7 +29,7 @@ if __name__ == '__main__':
                 rs[unpin_n].unpin()
                 unpin_n += 1
 
-        DISPLAYSURF.fill((92, 92, 138))
+        DISPLAYSURF.fill((92, 92, 10))
         for r in rs:
             r.update(20./FPS)
             r.draw(DISPLAYSURF)

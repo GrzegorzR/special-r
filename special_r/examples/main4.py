@@ -2,7 +2,7 @@ import sys
 import random
 from pygame.locals import *
 
-from special_r.Rect import *
+from special_r.BasicRect import *
 
 
 class RectSource:
@@ -28,7 +28,7 @@ class TestRectSrc(RectSource):
         self.color = color
 
     def add_rect(self):
-        self.rects.append(Rect(self.x, self.y, self.x, self.y + 15, 40, 10, random.random() * 5, self.color()))
+        self.rects.append(BasicRect(self.x, self.y, self.x, self.y + 15, 40, 10, random.random() * 5, self.color()))
 
 def scene1():
     pygame.init()
@@ -43,7 +43,7 @@ def scene1():
         x, y = 450., 150. + 50 * i
         xp, yp = x, y - 20
         w, h = 20, 100
-        rs.append(Rect(x, y, xp, yp, w, h, 0.2 * i, (0, i * 20, 255)))
+        rs.append(BasicRect(x, y, xp, yp, w, h, 0.2 * i, (0, i * 20, 255)))
     c, unpin_n = 1, 0
     while True:
         for event in pygame.event.get():
@@ -79,7 +79,7 @@ def scene2():
         x, y = 450., 150. + 50 * i
         xp, yp = x, y - 20
         w, h = 20, 100
-        rs.append(Rect(x, y, xp, yp, w, h, 0.2 * i, (0, i * 20, 255)))
+        rs.append(BasicRect(x, y, xp, yp, w, h, 0.2 * i, (0, i * 20, 255)))
     c, unpin_n = 1, 0
 
     while True:
