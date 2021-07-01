@@ -11,7 +11,7 @@ class PinRect(BasicRect):
 
 
     def draw(self, surface):
-
+        super(PinRect, self).draw(surface)
         points_tmp = self.piv_points_arr
         v = np.cross(np.array([0, 0, self.vr]),
                      np.array([points_tmp[1][0] - self.xp, points_tmp[1][1] - self.yp, 0])) * 10
@@ -64,3 +64,13 @@ class PinRect(BasicRect):
 
         self.xp, self.yp = self.piv_points_arr[0][0], self.piv_points_arr[0][1]
         self.rotation_fraction = 1.
+
+if __name__ == '__main__':
+    from special_r.Scene import Scene
+
+    x,y = 200., 200.,
+    w,h = 100., 50.
+    r = PinRect(x,y,w,h,)
+    s = Scene([r], 0)
+    s.animate(0)
+

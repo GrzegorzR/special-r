@@ -11,7 +11,7 @@ WHITE = (255, 255, 255)
 
 
 class BasicRect:
-    def __init__(self, x, y,  w, h, xp=0, yp=0, r=0, vr=0.05, color=(0, 0, 255)):
+    def __init__(self, x, y,  w, h, xp=0, yp=0, r=0, vr=0.1, color=(0, 0, 255)):
         self.center = np.array([x, y])
         # self.rotation_pivot = np.array([x+xp, x+yp])
         #self.xp, self.yp = xp, yp
