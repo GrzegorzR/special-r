@@ -1,0 +1,16 @@
+<colors>
+<palette name='color1'>
+<color name='color-theme_IMG_0549-1' rgb='BF7582' r='191' g='117' b='130' />
+<color name='color-theme_IMG_0549-2' rgb='73D97A' r='115' g='217' b='122' />
+<color name='color-theme_IMG_0549-3' rgb='87A668' r='135' g='166' b='104' />
+<color name='color-theme_IMG_0549-4' rgb='F2CAA7' r='242' g='202' b='167' />
+<color name='color-theme_IMG_0549-5' rgb='F24130' r='242' g='65' b='48' />
+</palette>
+    <palette name='color2'>
+<color name='color-theme_IMG_0429-1' rgb='00090D' r='0' g='9' b='13' />
+<color name='color-theme_IMG_0429-2' rgb='025E73' r='2' g='94' b='115' />
+<color name='color-theme_IMG_0429-3' rgb='05F2DB' r='5' g='242' b='219' />
+<color name='color-theme_IMG_0429-4' rgb='027368' r='2' g='115' b='104' />
+<color name='color-theme_IMG_0429-5' rgb='027353' r='2' g='115' b='83' />
+</palette>
+</colors>

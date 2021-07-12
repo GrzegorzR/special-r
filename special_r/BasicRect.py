@@ -11,7 +11,7 @@ WHITE = (255, 255, 255)
 
 
 class BasicRect:
-    def __init__(self, x, y,  w, h, xp=0, yp=0, r=0, vr=0.1, color=(0, 0, 255)):
+    def __init__(self, x, y,  w, h, xp=0, yp=0, r=0., vr=0.1, color=(0, 0, 255)):
         self.center = np.array([x, y])
         # self.rotation_pivot = np.array([x+xp, x+yp])
         #self.xp, self.yp = xp, yp
@@ -29,10 +29,9 @@ class BasicRect:
         self.rotation_fraction = 1
         self.w, self.h = w, h
         self.a = np.array([0, 0])
-        self.color = color
+        self.color = pygame.Color(color)
         self.gravity_dir = 1
-        self.diagonal_len = math.sqrt(w * w + h * h)
-        self.border = 1.6
+        self.diagonal_len = math.sqrt((w * w) + (h * h))
 
         self.ver_points_mat = np.array([[w / 2., h / 2.], [w / 2., - h / 2.], [-w / 2., -h / 2.], [-w / 2., h / 2.]])
         self.piv_points_mat = np.array([[self.xo, self.yo], [self.xo, -self.yo], [0, 0]])
@@ -48,7 +47,7 @@ class BasicRect:
 
     def update_postions_arrays(self):
         self.ver_points_arr = np.tile(self.center, [4, 1]) + self.ver_points_mat
-        self.piv_points_arr = self.center + self.piv_points_mat
+        self.piv_points_arr = np.round(self.center + self.piv_points_mat)
 
     def get_rotation_matrix(self, r):
         r00, r01, r10, r11 = math.cos(r), math.sin(r), -math.sin(r), math.cos(r)
@@ -89,13 +88,6 @@ class BasicRect:
     def draw(self, surface):
         # rot_matrix = self.get_rotation_matrix(self.r)
 
-
-
-        if self.border:
-            border_points = (self.border * (self.ver_points_arr- self.center  ) / (self.diagonal_len / 2)) + self.ver_points_arr
-
-            pygame.gfxdraw.filled_polygon(surface, border_points.astype(int), (0, 0, 0))
-            pygame.gfxdraw.aapolygon(surface, border_points.astype(int), (0, 0, 0))
 
 
         pygame.gfxdraw.filled_polygon(surface, self.ver_points_arr.astype(int), self.color)
