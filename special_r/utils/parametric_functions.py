@@ -17,7 +17,7 @@ class ParametricCircle:
     def __call__(self, *args, **kwargs):
         t = args[0]
         if self.clockwise:
-            return sin(t + self.phase), cos(t + self.phase)
+            return sin(t + self.phase), cos(t+ self.phase),
         else:
             return sin(t + self.phase), -cos(t + self.phase)
 parametric_functions = {

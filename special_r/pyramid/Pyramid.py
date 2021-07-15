@@ -62,9 +62,11 @@ class PyramidMoving(Pyramid):
         self.x_t, self.y_t = self.x_t / self.animation_parameter, self.y_t / self.animation_parameter
 
     def update(self, ts):
-        self.t += ts * 1.
+        self.t += ts
+        print(self.t)
         self.rects = []
         self.x_t, self.y_t = self.move_fun(self.t)
+        #print(self.x_t, self.y_t)
         self.x_t, self.y_t = self.x_t / self.animation_parameter, self.y_t / self.animation_parameter
         self.updates_rects()
         super(PyramidMoving, self).update(ts)
