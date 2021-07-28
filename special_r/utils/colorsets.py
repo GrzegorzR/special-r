@@ -8,6 +8,10 @@ basic_custom_mechanical_keybors_gone_wrong = {'background': (73, 73, 71),
 
 blue_crystal_vienna = ['#00090D', '#025E73', '#05F2DB', '#027368', '#027353', '#00090D']
 schiele_1 = ['#00010D', '#038C65', '#027353', '#8C623E', '#BFA799']
+mech_keyboard = ['#F26671', '#F27EB4', '#D9AA71', '#F28066', '#261614']
+nikifor_1 = ['#242526', '#023059', '#8FA6A1', '#5B7349', '#592D2D']
+vienna_wom = ['#F2ECCE', '#F2B6B6', '#A665A1', '#734343', '#394144']
+vienna_strips = ['#040FD9', '#0554F2', '#00C5D6', '#71FAA8', '#FF82BB']
 
 
 def asd():

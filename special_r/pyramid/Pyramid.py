@@ -8,7 +8,7 @@ from special_r.Scene import Scene
 
 
 class Pyramid:
-    def __init__(self, x, y, w, h, colors, scale=0.9, x_t=0., y_t=0., height=5, border=0., vr=0.0):
+    def __init__(self, x, y, w, h, colors, scale=0.9, x_t=0., y_t=0., height=5, border=2., vr=0.0):
         # x,y,w,h - position and size of the base rect in pyramid
         # scale - (0,1) size of the each next rect
         #
@@ -53,17 +53,17 @@ class Pyramid:
 
 class PyramidMoving(Pyramid):
 
-    def __init__(self, x, y, w, h, move_fun, colors, scale=0.99, height=20, vr=0.0):
-        super().__init__(x, y, w, h, scale=scale, height=height, colors=colors, vr=vr)
+    def __init__(self, x, y, w, h, move_fun, colors, scale=0.99, height=20, anim_param=10., vr=0.0, border=0.):
+        super().__init__(x, y, w, h, scale=scale, height=height, colors=colors, vr=vr, border=border)
         self.t = 0.
-        self.animation_parameter = 10.
+        self.animation_parameter = anim_param
         self.move_fun = move_fun
         self.x_t, self.y_t = self.move_fun(self.t)
         self.x_t, self.y_t = self.x_t / self.animation_parameter, self.y_t / self.animation_parameter
 
     def update(self, ts):
         self.t += ts
-        print(self.t)
+        #print(self.t)
         self.rects = []
         self.x_t, self.y_t = self.move_fun(self.t)
         #print(self.x_t, self.y_t)
