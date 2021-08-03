@@ -1,4 +1,5 @@
 import xmltodict
+from colour import Color
 
 adobe_colors_file = 'data/colors.xml'
 
@@ -12,6 +13,18 @@ mech_keyboard = ['#F26671', '#F27EB4', '#D9AA71', '#F28066', '#261614']
 nikifor_1 = ['#242526', '#023059', '#8FA6A1', '#5B7349', '#592D2D']
 vienna_wom = ['#F2ECCE', '#F2B6B6', '#A665A1', '#734343', '#394144']
 vienna_strips = ['#040FD9', '#0554F2', '#00C5D6', '#71FAA8', '#FF82BB']
+
+red = Color('red')
+white = Color('white')
+green = Color('green')
+
+
+def white_to_red(n):
+    return [c.hex_l.upper() for c in white.range_to(red, n)]
+
+
+def white_to_green(n):
+    return [c.hex_l.upper() for c in white.range_to(green, n)]
 
 
 def asd():

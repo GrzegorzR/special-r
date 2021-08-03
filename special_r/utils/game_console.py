@@ -3,7 +3,7 @@
 	supporting input and output in graphics (pygame)
 	source: https://github.com/xdoko01/Game-Console
 '''
-
+import math
 from io import StringIO # for redirection of commands output to the graphical console
 import sys	# for redirection of stdout to the graphical console
 import pygame # for Surface and graphics init
@@ -85,7 +85,9 @@ class CommandLineProcessor(cmd.Cmd):
 		
 		console_out = sys.stdout = StringIO()
 
-		globals_param = {'__buildins__' : None}
+		globals_param = {'__buildins__' : None,
+						 'sin': math.sin,
+						 'cos':math.cos}
 		
 		# Here you can name the reference to game object that is used. 
 		# For example 'app', 'engine', 'game', ...

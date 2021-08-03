@@ -1,4 +1,5 @@
 from math import cos, sin, pi
+from numpy import tanh
 
 
 def circle_clockwise(t):
@@ -43,6 +44,16 @@ class ParametricSegment:
         t = args[0]
         return self.a*sin(t), 0
 
+
+def create_transition_fun(v0, v1, t0, t1, slope_param=6.):
+    # create smooth transition between values v0 and v1 in time t0 -> t1
+
+    def out_fun(t):
+        dt = t1 - t0
+        dv = v1 - v0
+        return ((tanh((t - t0 - (t1 - t0) / 2.) + slope_param / dt) + 1.) / 2.) * dv + v0
+
+    return out_fun
 
 parametric_functions = {
     'clockwise': circle_clockwise,

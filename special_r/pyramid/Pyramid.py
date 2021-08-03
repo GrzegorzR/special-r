@@ -1,10 +1,12 @@
 import numpy as np
 import pygame
+import math
 from math import sin, cos
 
 from special_r.BasicRect import BasicRect
 from special_r.BorderRect import BorderRect
 from special_r.Scene import Scene
+from special_r.utils.parametric_functions import create_transition_fun
 
 
 class Pyramid:
@@ -23,7 +25,7 @@ class Pyramid:
         self.scale = scale
         self.height = height
         self.vr = vr
-        self.border= border
+        self.border = border
         self.colors = colors
         self.rects = []
         self.updates_rects()
@@ -53,23 +55,53 @@ class Pyramid:
 
 class PyramidMoving(Pyramid):
 
-    def __init__(self, x, y, w, h, move_fun, colors, scale=0.99, height=20, anim_param=10., vr=0.0, border=0.):
+    def __init__(self, x, y, w, h, move_fun, colors, scale=0.99, height=20, anim_param=1., vr=0.0, border=0.):
         super().__init__(x, y, w, h, scale=scale, height=height, colors=colors, vr=vr, border=border)
         self.t = 0.
         self.animation_parameter = anim_param
         self.move_fun = move_fun
         self.x_t, self.y_t = self.move_fun(self.t)
         self.x_t, self.y_t = self.x_t / self.animation_parameter, self.y_t / self.animation_parameter
+        self.height_fun = lambda t: height
+        self.scale_fun = lambda t: scale
+
+    def change_xyt(self, x1, y1, translation_time=10.):
+        x0, y0 = self.x_t, self.y_t
+        t0, t1 = self.t, self.t + translation_time
+
+        transition_fun_x = create_transition_fun(x0, x1, t0, t1)
+        transition_fun_y = create_transition_fun(y0, y1, t0, t1)
+        self.move_fun = lambda t: (transition_fun_x(t), transition_fun_y(t))
+
+    def change_xt(self, x1, translation_time=10.):
+        self.change_xyt(x1, self.y_t, translation_time)
+
+    def change_yt(self, y1, translation_time=10.):
+        self.change_xyt(self.x_t, y1, translation_time)
+
+    def change_height(self, h1, translation_time=15):
+        h0 = self.height
+        t0, t1 = self.t, self.t + translation_time
+
+        transition_fun_h = create_transition_fun(h0, h1, t0, t1)
+        self.move_h = lambda t: round(transition_fun_h(t))
+
+    def change_scale(self, s1, translation_time=10):
+        s0 = self.scale
+        t0, t1 = self.t, self.t + translation_time
+
+        transition_fun_h = create_transition_fun(s0, s1, t0, t1)
+        self.scale_fun = lambda t: transition_fun_h(t)
 
     def update(self, ts):
-        self.t += ts
-        #print(self.t)
         self.rects = []
+        self.height = self.height_fun(self.t)
+        self.scale = self.scale_fun(self.t)
         self.x_t, self.y_t = self.move_fun(self.t)
-        #print(self.x_t, self.y_t)
         self.x_t, self.y_t = self.x_t / self.animation_parameter, self.y_t / self.animation_parameter
         self.updates_rects()
         super(PyramidMoving, self).update(ts)
+        self.t += ts
 
 
 def simple():
