@@ -2,6 +2,7 @@ from math import pi
 from special_r.Scene import Scene
 from special_r.pyramid.Pyramid import PyramidMoving
 from special_r.pyramid.StockPyramidsDrawer import StockPyramidsDrawer
+from special_r.utils.colorsets import vienna_wom
 
 
 class TilingRects:
@@ -36,3 +37,23 @@ class TilingRects:
 
     def calculate_steps_num(self, dt):
         return 16 * pi / dt
+
+
+if __name__ == '__main__':
+    small = (200, 200)
+    big_vertical = (400, 200)
+    big_horizontal = (200, 400)
+    sizes = [small, small, small, small, small, big_horizontal,
+             small, small, big_vertical, small,
+             small, big_horizontal, small, small, small, small,
+             small, small, small, big_vertical]
+    positions = [(100, 100), (300,100), (500,100), (700, 100), (900,100), (1100, 200),
+                 (100,300), (300,300), (600,300), (900, 300),
+                 (100,500), (300, 600), (500,500), (700, 500), (900,500), (1100, 500),
+                 (100,700), (500,700), (700,700), (1000, 700)]
+    funs = [lambda t: (0, 0) for i in range(len(sizes))]
+    colorsets = [vienna_wom for i in range(len(sizes)) ]
+    img_size= (1200, 800)
+
+    t = TilingRects(sizes, positions, funs, colorsets, img_size)
+    t.animate(0.01, None)

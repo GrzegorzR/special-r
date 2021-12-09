@@ -57,17 +57,17 @@ def part_3():
                 clockwise = False
 
             p = PyramidMoving(150 + x * 200, 150 + y * 200, w, h, ParametricCircle(clockwise, phase),
-                              colors=c, scale=0.75, height=11)
+                              colors=c, scale=0.75, height=13, borders_colors=c)
             pyramides.append(p)
 
     o = StockPyramidsDrawer(pyramides)
-    s = Scene([o], bg_color=c[0])
+    s = Scene([o], bg_color=c[0], img_size=(1080, 1920))
     s.animate(dt, output_dir=out_dir, save_range=(0, steps))
 
 
 def part_5():
     out_dir = 'out/pym_6'
-    # out_dir = None
+    out_dir = None
     # c = nikifor_1
     c = mech_keyboard
     w, h = 200, 200
@@ -92,7 +92,7 @@ def part_5():
 
 def part_6():
     out_dir = 'out/pym_6'
-    # out_dir = None
+    out_dir = None
     # c = nikifor_1
     c = vienna_wom
     # c = vienna_strips
@@ -156,7 +156,7 @@ def tiling_1(out_dir, funs, colorsets, dt=0.04, border_size=2):
 
 def part_7():
     out_dir = 'out/pym_7_7'
-    # out_dir = None
+    out_dir = None
     img_size = (900, 900)
 
     funs = [
@@ -184,7 +184,7 @@ def part_7():
 
 def part_8():
     out_dir = 'out/pym_14'
-    #out_dir = None
+    out_dir = None
 
     dt = 0.04
 
@@ -257,4 +257,4 @@ def part_8():
 
 
 if __name__ == '__main__':
-    part_8()
+    part_3()

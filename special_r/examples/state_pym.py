@@ -5,15 +5,32 @@ from special_r.Scene import Scene
 from special_r.pyramid.Pyramid import PyramidMoving
 from special_r.utils.colorsets import vienna_wom, white_to_green
 
+states = {
+    'pos': [],
+    'xyt': [],
+    'scale': [],
+    'size': []
+}
+
 
 class StatePym(PyramidMoving):
-    def __init__(self, x, y, w, h, states_list, transition_time, height, scale, colors):
-        self.states_list = itertools.cycle(states_list)
+    def __init__(self,  states, transition_time, height, colors, borders_colors=None):
+        self.states_pos = itertools.cycle(states['pos'])
+        self.states_xyt = itertools.cycle(states['xyt'])
+        self.states_scale = itertools.cycle(states['scale'])
+        self.states_size = itertools.cycle(states['size'])
+
         self.transition_time = transition_time
-        self.current_state = 0
+        self.current_state = 0.5
         # x, y, w, h, move_fun, colors,
-        move_fun = lambda t: (0., 0.)
-        super().__init__(x, y, w, h, move_fun, height=height, scale=scale, colors=colors)
+        xt0, yt0 = next(self.states_xyt)
+        x0, y0 = next(self.states_pos)
+        w0, h0 = next(self.states_size)
+        scale0 = next(self.states_scale)
+        move_fun = lambda t: (xt0, yt0)
+
+        super().__init__(x0, y0, w0, h0, move_fun, height=height, scale=scale0,
+                         colors=colors, borders_colors=borders_colors)
 
     def update(self, ts):
         new_state = self.calculate_state()
@@ -30,8 +47,17 @@ class StatePym(PyramidMoving):
             return 0
 
     def change_state(self):
-        x1, y1 = next(self.states_list)
-        self.change_xyt(x1, y1, self.transition_time)
+        asd = next(self.states_pos)
+        x1, y1 = asd
+
+        xt1, yt1 = next(self.states_xyt)
+        s1 = next(self.states_scale)
+        w1, h1 = next(self.states_size)
+
+        self.change_pos(x1, y1, self.transition_time)
+        self.change_size(h1, w1, self.transition_time)
+        self.change_xyt(xt1, yt1, self.transition_time)
+        self.change_scale(s1, self.transition_time)
 
 
 def scene_states():
@@ -46,11 +72,14 @@ def scene_states():
     steps = (7. / dt) * 5 * 2
     x = 400
     y = 400
-    colors = white_to_green(height + 1)
+    # colors = white_to_green(height + 1)
     transition_time = 7.
-    states = [(0.2, 0.2), (-0.2, 0.2), (0.2, -0.2),
-              (-0.2, -0.2), (0., 0.)]
-    p = StatePym(x, y, w, h, states, transition_time, height, scale, colors[1:])
+    states = {'xyt': [(0.2, 0.2), (0.2, 0.2), (0.2, -0.2), (-0.2, -0.2), (0., 0.)],
+              'pos': [(x, y), (x, y - 200), (x, y), (x, y), (x, y)],
+              'scale': [scale, scale, scale, scale, scale],
+              'size': [(w, h), (w, h), (w, h), (w, h), (w, h)]
+              }
+    p = StatePym(states, transition_time, height, colors)
 
     pyramides = []
     pyramides.append(p)

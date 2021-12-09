@@ -88,8 +88,6 @@ class BasicRect:
     def draw(self, surface):
         # rot_matrix = self.get_rotation_matrix(self.r)
 
-
-
         pygame.gfxdraw.filled_polygon(surface, self.ver_points_arr.astype(int), self.color)
         pygame.gfxdraw.aapolygon(surface, self.ver_points_arr.astype(int), self.color)
         # pygame.draw.polygon(surface, self.color, self.ver_points_arr)

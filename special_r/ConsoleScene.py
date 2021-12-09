@@ -4,7 +4,7 @@ import pygame
 from math import pi, sin, cos
 from numpy import tanh
 from pygame.locals import *
-
+import pygame.freetype
 from special_r.Scene import Scene
 from special_r.pyramid.Pyramid import PyramidMoving
 from special_r.pyramid.StockPyramidsDrawer import StockPyramidsDrawer
@@ -12,53 +12,7 @@ from special_r.utils.colorsets import *
 from special_r.utils.game_console import Console
 from special_r.utils.parametric_functions import ParametricSegment
 
-
-
-
-class ConsolePyramid(PyramidMoving):
-
-    def __init__(self, x, y, w, h, height, scale, colors):
-
-        self.height_fun = lambda t: height
-        self.scale_fun = lambda t: scale
-        super().__init__(x, y, w, h, move_fun, colors, scale=.85, border=2.)
-
-    def change_xyt(self, x1, y1, translation_time=10.):
-        x0, y0 = self.x_t, self.y_t
-        t0, t1 = self.t, self.t + translation_time
-
-        transition_fun_x = create_transition_fun(x0, x1, t0, t1)
-        transition_fun_y = create_transition_fun(y0, y1, t0, t1)
-        self.move_fun = lambda t: (transition_fun_x(t), transition_fun_y(t))
-
-    def change_xt(self, x1, translation_time=10.):
-        self.change_xyt(x1, self.y_t, translation_time)
-
-    def change_yt(self, y1, translation_time=10.):
-        self.change_xyt(self.x_t, y1, translation_time)
-
-    def change_height(self, h1, translation_time=15):
-        h0 = self.height
-        t0, t1 = self.t, self.t + translation_time
-
-        transition_fun_h = create_transition_fun(h0, h1, t0, t1)
-        self.move_h = lambda t: round(transition_fun_h(t))
-
-    def change_scale(self, s1, translation_time=10):
-        s0 = self.scale
-        t0, t1 = self.t, self.t + translation_time
-
-        transition_fun_h = create_transition_fun(s0, s1, t0, t1)
-        self.scale_fun = lambda t: transition_fun_h(t)
-
-    def update(self, ts):
-        self.height = self.height_fun(self.t)
-
-        self.scale = self.scale_fun(self.t)
-        super().update(ts)
-
-
-
+pygame.freetype.init()
 
 
 class ConsoleScene:
@@ -70,7 +24,7 @@ class ConsoleScene:
         self.bg_col = bg_color
         self.exit = False
         console_config = self.get_console_config()
-        self.console = Console(self, img_size[1], console_config)
+        self.console = Console(self, img_size[0], console_config)
 
     def update_rule(self):
         pass
@@ -89,7 +43,7 @@ class ConsoleScene:
 
         clock = pygame.time.Clock()
 
-        screen = pygame.display.set_mode(self.img_size)
+        screen = pygame.display.set_mode(self.img_size, pygame.FULLSCREEN)
 
         c, unpin_n = 1, 0
         while not self.exit:
@@ -113,8 +67,6 @@ class ConsoleScene:
 
             self.console.update(events)
 
-
-
             # Display the console if enabled or animation is still in progress
 
             self.console.show(screen)
@@ -124,7 +76,7 @@ class ConsoleScene:
                 if not c % 100:
                     print(f'{c}/{save_range[1]}')
                 pygame.image.save(screen, "{}/pym{}.png".format(output_dir, str(c).zfill(4)))
-                c+=1
+                c += 1
                 if c >= save_range[1]:
                     return
             clock.tick(30)
@@ -145,70 +97,149 @@ class ConsoleScene:
                 'layout': 'INPUT_BOTTOM',
                 'padding': (10, 10, 10, 10),
                 'bck_alpha': 150,
+                'font_size': 50,
                 # 'welcome_msg' : 'Sample 6: Mimimal - only input and output, with transparency and welcome msg\n***************\nType "exit" to quit\nType "help"/"?" for help\nType "? shell" for examples of python commands',
                 'welcome_msg_color': (0, 255, 0)
             },
             'input': {
                 'font_file': 'fonts/JackInput.ttf',
-                'bck_alpha': 0
+                'bck_alpha': 0,
+                'font_size': 50
             },
             'output': {
                 'font_file': 'fonts/JackInput.ttf',
                 'bck_alpha': 0,
-                'display_lines': 10,
-                'display_columns': 100
+                'display_lines': 6,
+                'display_columns': 100,
+                'font_size': 30
             }
         }
 
 
+class TextObj:
+    def __init__(self, ob, pos, update_fun):
+        self.pos = pos
+        self.ob = ob
+        self.font = pygame.freetype.Font('fonts/miscfs.ttf', 35)
+        self.text = 'abc'
+        self.update_fun = update_fun
+
+    def draw(self, screen):
+        text_surface, rect = self.font.render(self.text, (0, 0, 0))
+        rect.left = self.pos[0]
+        rect.top = self.pos[1]
+        screen.blit(text_surface, rect)
+
+    def update(self, dt):
+        self.text = self.update_fun(self.ob)
+
+
+class TextScale(TextObj):
+    def update(self, dt):
+        self.text = f'scale: {self.ob.scale:.2f}'
+
+
+class TextXY(TextObj):
+    def update(self, dt):
+        self.text = f'x_t: {self.ob.x_t:.2f}/n' \
+                    f'y_t: {self.ob.y_t:.2f}'
+
+
+class ConsolePym(PyramidMoving):
+    def __init__(self, x, y, w, h, move_fun, colors_fun, borders_colors_fun=None, scale=0.99, height=20, anim_param=1.,
+                 vr=0.0, border=2.):
+        self.colors_fun = colors_fun
+        self.height = height
+        if not borders_colors_fun:
+            self.borders_colors_fun = lambda l: [(0, 0, 0) for _ in range(l)]
+        else:
+            self.borders_colors_fun = borders_colors_fun
+        self.update_color()
+        super().__init__(x, y, w, h, move_fun, self.colors, scale, height, anim_param, vr, border)
+
+    def update_color(self):
+        self.colors = self.colors_fun(self.height)
+        self.borders_colors = self.borders_colors_fun(self.height)
+
+    def update(self, ts):
+        self.rects = []
+        self.height = self.height_fun(self.t)
+        self.scale = self.scale_fun(self.t)
+        self.x_t, self.y_t = self.xyt_fun(self.t)
+        self.update_color()
+        self.x_t, self.y_t = self.x_t / self.animation_parameter, self.y_t / self.animation_parameter
+        self.updates_rects()
+        super().update(ts)
+        self.t += ts
+
+
 def scene_console_simple():
+    out_dir = 'out/change_s_test'
     out_dir = None
-    c = vienna_wom
-    w, h = 200, 200
+    colors = vienna_wom
+    w, h = 700, 700
     height = 15
     dt = 0.2
-    scale = 0.90
+    scale = 0.86
     steps = 16 * pi / dt
     # print(steps, dt)
     x = 400
     y = 400
     fun = ParametricSegment()
+    fun = lambda t: (sin(t / 10.) / 20., 0)
+    colors = white_to_red(25)
+    colors = white_to_green(25)[4:]
+    colors_fun = lambda height: [(255, 255, 255) for _ in range(height - 1)] + [(40, 40, 0), (40, 40, 0)]
+    p = ConsolePym(x, y, w, h, fun, colors, scale=scale, border=2)
+    p.scale_fun = lambda t: 0.9 + sin(t / 5.) / 15.
+    t_scale = TextObj(p, (550, 600), lambda ob: f'scale: {ob.scale:.2f}')
+    t_x = TextObj(p, (550, 650), lambda ob: f'x_t: {ob.x_t:.2f}')
+    t_y = TextObj(p, (550, 700), lambda ob: f'y_t: {ob.y_t:.2f}')
+    t_h = TextObj(p, (550, 750), lambda ob: f'height: {ob.height}')
 
-    p = ConsolePyramid(x, y, w, h, height, scale, colors=c)
+    pyramides = []
+    pyramides.append(p)
+
+    s = ConsoleScene([p, t_x, t_y, t_scale, t_h], bg_color=colors[0])
+    s.animate(dt, output_dir=out_dir, save_range=(0, 9000))
+
+
+def scene_show_parameters():
+    #$out_dir = 'out/scene_1/scene_change_parameters'
+    out_dir = None
+    w, h = 400, 400
+    dt = 0.2
+    scale = 0.78
+    steps = 16 * pi / dt
+    img_size = (1920, 1080)
+    # print(steps, dt)
+    height = 1
+    x = 600
+    y = 600
+    fun = lambda t: (0, 0)
+    dark_red = '#380200'
+    colors_fun = lambda height: [(255, 255, 255) for _ in range(height - 1)] + [dark_red, dark_red]
+    grey = '#EBE6E6'
+    black = '#121717'
+    border_colors_fun = lambda l : colors_range_hex(Color(black), Color(grey), l)
+    p = ConsolePym(x, y, w, h, fun, colors_fun, borders_colors_fun=border_colors_fun,
+                   height=height, scale=scale, border=2)
+
+    text_pos_x, text_pos_y = x+300, y-200
+
+    t_h = TextObj(p, (text_pos_x, text_pos_y), lambda ob: f'height: {ob.height}')
+    t_scale = TextObj(p, (text_pos_x, text_pos_y + 50), lambda ob: f'scale: {ob.scale:.2f}')
+    t_x = TextObj(p, (text_pos_x, text_pos_y + 100), lambda ob: f'x_t: {ob.x_t:.2f}')
+    t_y = TextObj(p, (text_pos_x, text_pos_y + 150), lambda ob: f'y_t: {ob.y_t:.2f}')
 
     pyramides = []
     pyramides.append(p)
 
-    s = ConsoleScene([p], bg_color=c[1])
-    s.animate(dt, output_dir=out_dir, save_range=(0, steps))
-
-def scene_states():
-    out_dir = 'out/pym_18'
-    #out_dir = None
-    colors = vienna_wom
-
-    w, h = 200, 200
-    height = 15
-    dt = 0.1
-    scale = 0.93
-    steps = (7./dt)*5*2
-    x = 400
-    y = 400
-    colors = white_to_green(height+1)
-    transition_time = 7.
-    states = [(0.2, 0.2), (-0.2, 0.2),(0.2, -0.2),
-              (-0.2, -0.2), (0.,0.)]
-    p = StatePym(x, y, w, h, states, transition_time, height, scale, colors[1:])
-
-    pyramides = []
-    pyramides.append(p)
-    s = ConsoleScene([p], bg_color=colors[0])
-    s.animate(dt, output_dir=out_dir, save_range=(0, steps))
-
-
-
+    s = ConsoleScene([p, t_x, t_y, t_scale, t_h], img_size=img_size, bg_color='#82808A')
+    s.animate(dt, output_dir=out_dir, save_range=(0, 9000))
 
 
 if __name__ == '__main__':
-    scene_states()
-
+    # print(pygame.font.get_fonts())
+    # scene_console_simple()
+    scene_show_parameters()
