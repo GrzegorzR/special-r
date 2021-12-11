@@ -9,7 +9,7 @@ import pygame.gfxdraw
 from special_r.Scene import Scene
 from special_r.movie_2.movie_2_objects import RhombusFractal, HorRhombusFractal
 from special_r.utils.colorsets import *
-from special_r.utils.parametric_functions import create_transition_fun
+from special_r.utils.parametric_functions import create_transition_fun, create_linear_transition_fun
 from special_r.utils.callable_objects import CallableNumerical as CN
 
 
@@ -56,8 +56,10 @@ def scene_object_on_off():
     q_fun = lambda t: 600
     p_fun = lambda t: 400
 
-    scale_fun = create_transition_fun(0, 1, 0, 10, 20)
-    scale_fun2 = create_transition_fun(0, 1, 8, 12, 4)
+    trans_fun1 = create_transition_fun(0, 1, 0, 10, 20)
+    trans_fun2 = create_transition_fun(0, 1, 8, 12, 4)
+    scale_fun = lambda t: (trans_fun1(t), None)
+    scale_fun2 = lambda t: (trans_fun2(t), None)
 
     # 400x = 600
     #
@@ -70,11 +72,11 @@ def scene_object_on_off():
     rhombus_fractal5 = HorRhombusFractal(400, 300, CN(266 / 2), CN(400 / 2), colorset)
 
 
-    rhombus_fractal.scale_fun = scale_fun
-    rhombus_fractal2.scale_fun = scale_fun2
-    rhombus_fractal3.scale_fun = scale_fun2
-    rhombus_fractal4.scale_fun = scale_fun2
-    rhombus_fractal5.scale_fun = scale_fun2
+    rhombus_fractal.scale_time_fun = scale_fun
+    rhombus_fractal2.scale_time_fun = scale_fun2
+    rhombus_fractal3.scale_time_fun = scale_fun2
+    rhombus_fractal4.scale_time_fun = scale_fun2
+    rhombus_fractal5.scale_time_fun = scale_fun2
 
     rhombus_list += [rhombus_fractal, rhombus_fractal2, rhombus_fractal3, rhombus_fractal4, rhombus_fractal5]
 
@@ -84,8 +86,8 @@ def scene_object_on_off():
 
 def scene_size_with_scale():
     colorset = sorted(chinskie)
-    # colorset = schiele_1
-    # random.shuffle(colorset)
+    #colorset = to_zdjecie
+    random.shuffle(colorset)
     # r = Rhombus(200, 200, 100, 200)
     x, y = 400, 400
     rhombus_list = []
@@ -94,35 +96,37 @@ def scene_size_with_scale():
     # p_fun = lambda t: 300
     q_fun = lambda t: 600
     p_fun = lambda t: 400
-    scale_fun = lambda t: ((sin(t) + 1.) , (400, 400))
-    scale_fun2 = lambda t: ((sin(t) + 1.) , (400, 400))
-    #scale_fun = create_transition_fun(0, 1, 0, 10, 20)
-    #scale_fun2 = create_transition_fun(0, 1, 8, 12, 4)
+    scale_time_fun = lambda t: ((sin(t)*1.25 + 1.5), (500, 400))
+    scale_size_fun = create_linear_transition_fun(0., 1., 0, 40000)
 
-    # 400x = 600
-    #
-    # rhombus_list.append(RhombusFractal(400, 400, p_fun, q_fun, 0, colorset))
     rhombus_fractal = RhombusFractal(400, 400, p_fun, q_fun, colorset)
-    rhombus_fractal2 = RhombusFractal(500, 400, CN(266 / 2), CN(400 / 2), colorset)
-    rhombus_fractal3 = RhombusFractal(300, 400, CN(266 / 2), CN(400 / 2), colorset)
+    rhombus_fractal2 = RhombusFractal(500, 400, CN((266 / 2)+2), CN((400 / 2)+2), colorset)
+    rhombus_fractal3 = RhombusFractal(300, 400, CN((266 / 2)+2), CN((400 / 2)+2), colorset)
 
-    rhombus_fractal4 = HorRhombusFractal(400, 500, CN(266 / 2), CN(400 / 2), colorset)
-    rhombus_fractal5 = HorRhombusFractal(400, 300, CN(266 / 2), CN(400 / 2), colorset)
+    rhombus_fractal4 = HorRhombusFractal(400, 500, CN((266 / 2)+2), CN((400 / 2)+2), colorset)
+    rhombus_fractal5 = HorRhombusFractal(400, 300, CN((266 / 2)+2), CN((400 / 2)+2), colorset)
 
 
-    rhombus_fractal.scale_fun = scale_fun
-    rhombus_fractal2.scale_fun = scale_fun2
-    rhombus_fractal3.scale_fun = scale_fun2
-    rhombus_fractal4.scale_fun = scale_fun2
-    rhombus_fractal5.scale_fun = scale_fun2
+    rhombus_fractal.scale_size_fun = scale_size_fun
+    rhombus_fractal2.scale_size_fun = scale_size_fun
+    rhombus_fractal3.scale_size_fun = scale_size_fun
+    rhombus_fractal4.scale_size_fun = scale_size_fun
+    rhombus_fractal5.scale_size_fun = scale_size_fun
+
+    rhombus_fractal.scale_time_fun = scale_time_fun
+    rhombus_fractal2.scale_time_fun = scale_time_fun
+    rhombus_fractal3.scale_time_fun = scale_time_fun
+    rhombus_fractal4.scale_time_fun = scale_time_fun
+    rhombus_fractal5.scale_time_fun = scale_time_fun
+
 
     rhombus_list += [rhombus_fractal, rhombus_fractal2, rhombus_fractal3, rhombus_fractal4, rhombus_fractal5]
 
     s = Scene(rhombus_list, bg_color=colorset[1])
-    s.animate(0, output_dir=None, save_range=None)
+    s.animate(0.05, output_dir=None, save_range=None)
 
 
 if __name__ == '__main__':
     scene_object_on_off()
-    # scene_size_with_scale()
-    # scene_1()
+    #scene_size_with_scale()
+    #scene_1()
