@@ -225,6 +225,13 @@ class RhombusFractal:
         x_t3, y_t3 = line_intersection(line_2, line_AB)
         x_t4, y_t4 = line_intersection(line_2, line_DC)
 
+
+        # for smaller sizes
+        # x_t1, y_t1 = x_t1 + 1, y_t1 - 1
+        # x_t2, y_t2 = x_t2 - 1, y_t2 + 1
+        # x_t3, y_t3 = x_t3 + 1, y_t3 - 1
+        # x_t4, y_t4 = x_t3 - 1, y_t3 + 1
+
         trapezoid_1 = np.array([[x, y], self.objects[3].ver_points_arr[1], [x_t1, y_t1],
                                 self.objects[4].ver_points_arr[2]])
 
