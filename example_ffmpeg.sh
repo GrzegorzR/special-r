@@ -1,0 +1,1 @@
+ffmpeg -r 60 -i pym%04d.png -vcodec mpeg4 -y -b 15000k  pym_3.mp4
