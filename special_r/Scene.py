@@ -54,8 +54,8 @@ class Scene:
             if self.c > save_range[1]:
                 return
             if not self.c % 100:
-                #print(f'{self.c}/{save_range[1]}')
-                pass
+                print(f'{self.c}/{save_range[1]}')
+                #pass
             if output_dir:
                 if save_range:
                     if save_range[0] <= self.c <= save_range[1]:

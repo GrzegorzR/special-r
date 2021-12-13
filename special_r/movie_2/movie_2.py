@@ -71,7 +71,6 @@ def scene_object_on_off():
     rhombus_fractal4 = HorRhombusFractal(400, 500, CN(266 / 2), CN(400 / 2), colorset)
     rhombus_fractal5 = HorRhombusFractal(400, 300, CN(266 / 2), CN(400 / 2), colorset)
 
-
     rhombus_fractal.scale_time_fun = scale_fun
     rhombus_fractal2.scale_time_fun = scale_fun2
     rhombus_fractal3.scale_time_fun = scale_fun2
@@ -85,9 +84,10 @@ def scene_object_on_off():
 
 
 def scene_size_with_scale():
-    colorset = sorted(chinskie)
-    #colorset = to_zdjecie
-    random.shuffle(colorset)
+    colorset = list(reversed(sorted(chinskie)))
+    # colorset = to_zdjecie
+    #random.shuffle(colorset)
+    #colorset = chinskie
     # r = Rhombus(200, 200, 100, 200)
     x, y = 400, 400
     rhombus_list = []
@@ -96,37 +96,26 @@ def scene_size_with_scale():
     # p_fun = lambda t: 300
     q_fun = lambda t: 600
     p_fun = lambda t: 400
-    scale_time_fun = lambda t: ((sin(t)*1.25 + 1.5), (500, 400))
+    scale_time_fun = lambda t: ((sin(t/2) * 2 + 2), (500, 400))
     scale_size_fun = create_linear_transition_fun(0., 1., 0, 40000)
 
     rhombus_fractal = RhombusFractal(400, 400, p_fun, q_fun, colorset)
-    rhombus_fractal2 = RhombusFractal(500, 400, CN((266 / 2)+2), CN((400 / 2)+2), colorset)
-    rhombus_fractal3 = RhombusFractal(300, 400, CN((266 / 2)+2), CN((400 / 2)+2), colorset)
+    r2 = rhombus_fractal.get_objects_down()
+    r3 = []
+    for r in r2:
+        r3 += r.get_objects_down()
 
-    rhombus_fractal4 = HorRhombusFractal(400, 500, CN((266 / 2)+2), CN((400 / 2)+2), colorset)
-    rhombus_fractal5 = HorRhombusFractal(400, 300, CN((266 / 2)+2), CN((400 / 2)+2), colorset)
-
-
-    rhombus_fractal.scale_size_fun = scale_size_fun
-    rhombus_fractal2.scale_size_fun = scale_size_fun
-    rhombus_fractal3.scale_size_fun = scale_size_fun
-    rhombus_fractal4.scale_size_fun = scale_size_fun
-    rhombus_fractal5.scale_size_fun = scale_size_fun
-
-    rhombus_fractal.scale_time_fun = scale_time_fun
-    rhombus_fractal2.scale_time_fun = scale_time_fun
-    rhombus_fractal3.scale_time_fun = scale_time_fun
-    rhombus_fractal4.scale_time_fun = scale_time_fun
-    rhombus_fractal5.scale_time_fun = scale_time_fun
-
-
-    rhombus_list += [rhombus_fractal, rhombus_fractal2, rhombus_fractal3, rhombus_fractal4, rhombus_fractal5]
-
+    rhombus_list = [rhombus_fractal] + r2 + r3
+    for r in rhombus_list:
+        r.scale_size_fun = scale_size_fun
+        r.scale_time_fun = scale_time_fun
     s = Scene(rhombus_list, bg_color=colorset[1])
-    s.animate(0.05, output_dir=None, save_range=None)
+    output_dir ='out/movie_2/scene_scale_1'
+    output_dir = None
+    s.animate(0.05, output_dir=output_dir, save_range=(0,1000))
 
 
 if __name__ == '__main__':
-    scene_object_on_off()
-    #scene_size_with_scale()
-    #scene_1()
+    # scene_object_on_off()
+    scene_size_with_scale()
+    # scene_1()

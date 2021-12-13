@@ -9,7 +9,7 @@ import pygame.gfxdraw
 from special_r.Scene import Scene
 from special_r.movie_2.movie_2_fun import line_intersection
 from special_r.utils.parametric_functions import create_transition_fun, create_linear_transition_fun
-
+from special_r.utils.callable_objects import CallableNumerical as CN
 
 class Shape:
     def __init__(self, ver_points_arr, color=(100, 150, 150)):
@@ -117,6 +117,24 @@ class RhombusFractal:
 
         self.objects = []
 
+    def get_objects_down(self):
+        p, q = self.p, self.q
+        small_q = p / 2.
+        small_p = (p * p) / (2. * q)
+        x_1, y_1 = self.x, self.y + p / 4.
+        x_2, y_2 = self.x, self.y - p / 4.
+        x_3, y_3 = self.x + p / 4., self.y
+        x_4, y_4 = self.x - p / 4., self.y
+
+        r_1 = HorRhombusFractal(x_1, y_1, CN(small_p), CN(small_q), self.colorset)
+        r_2 = HorRhombusFractal(x_2, y_2, CN(small_p), CN(small_q), self.colorset)
+        r_3 = RhombusFractal(x_3, y_3, CN(small_p), CN(small_q), self.colorset)
+        r_4 = RhombusFractal(x_4, y_4, CN(small_p), CN(small_q), self.colorset)
+
+        return [r_1, r_2, r_3, r_4]
+
+
+
     def size(self):
         points = [o.ver_points_arr for o in self.objects]
         points = np.concatenate(points)
@@ -126,6 +144,7 @@ class RhombusFractal:
         min_val = np.min(points, axis=0)
         size = (max_val[0] - min_val[0]) * (max_val[1] - min_val[1])
         return size
+
     def center(self):
         points = [o.ver_points_arr for o in self.objects]
         points = np.concatenate(points)
@@ -133,12 +152,12 @@ class RhombusFractal:
         # print(points)
         max_val = np.max(points, axis=0)
         min_val = np.min(points, axis=0)
-        x_center = (max_val[0] + min_val[0])/2.
-        y_center = (max_val[1] + min_val[1])/2.
+        x_center = (max_val[0] + min_val[0]) / 2.
+        y_center = (max_val[1] + min_val[1]) / 2.
         return x_center, y_center
 
     def rotate_self(self, angle):
-        x,y = self.center()
+        x, y = self.center()
 
         for o in self.objects:
             o.rotate(angle, (x, y))
@@ -150,7 +169,7 @@ class RhombusFractal:
         self.q = self.q_fun(self.t)
 
         self.update_objects()
-        #if self.scale_fun:
+        # if self.scale_fun:
         #    self.scale_self(self.scale_fun(self.t))
 
     def scale_self(self, v):
@@ -171,15 +190,12 @@ class RhombusFractal:
             for o in self.objects:
                 o.scale(s_v, s_v, s_p[0], s_p[1])
 
-
-        #print(self.size(), scale_v)
+        # print(self.size(), scale_v)
         if self.scale_size_fun:
             scale_v = self.scale_size_fun(self.size())
-            #s_v, s_p = self.scale_fun(self.t)
+            # s_v, s_p = self.scale_fun(self.t)
             for o in self.objects:
                 o.scale_self(scale_v)
-
-
 
         # self.objects.append(Triangle((x, y), self.objects[3].ver_points_arr[1], self.objects[4].ver_points_arr[2]))
 
@@ -261,11 +277,8 @@ class HorRhombusFractal(RhombusFractal):
         super().__init__(x, y, p_fun, q_fun, colorset)
 
     def update(self, ts):
-
         super().update(ts)
         self.rotate_self(pi / 2.)
 
     def draw(self, surface):
-
         super().draw(surface)
-
