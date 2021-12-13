@@ -126,6 +126,7 @@ class RhombusFractal:
         min_val = np.min(points, axis=0)
         size = (max_val[0] - min_val[0]) * (max_val[1] - min_val[1])
         return size
+
     def center(self):
         points = [o.ver_points_arr for o in self.objects]
         points = np.concatenate(points)
@@ -133,12 +134,12 @@ class RhombusFractal:
         # print(points)
         max_val = np.max(points, axis=0)
         min_val = np.min(points, axis=0)
-        x_center = (max_val[0] + min_val[0])/2.
-        y_center = (max_val[1] + min_val[1])/2.
+        x_center = (max_val[0] + min_val[0]) / 2.
+        y_center = (max_val[1] + min_val[1]) / 2.
         return x_center, y_center
 
     def rotate_self(self, angle):
-        x,y = self.center()
+        x, y = self.center()
 
         for o in self.objects:
             o.rotate(angle, (x, y))
@@ -150,7 +151,7 @@ class RhombusFractal:
         self.q = self.q_fun(self.t)
 
         self.update_objects()
-        #if self.scale_fun:
+        # if self.scale_fun:
         #    self.scale_self(self.scale_fun(self.t))
 
     def scale_self(self, v):
@@ -171,15 +172,12 @@ class RhombusFractal:
             for o in self.objects:
                 o.scale(s_v, s_v, s_p[0], s_p[1])
 
-
-        #print(self.size(), scale_v)
+        # print(self.size(), scale_v)
         if self.scale_size_fun:
             scale_v = self.scale_size_fun(self.size())
-            #s_v, s_p = self.scale_fun(self.t)
+            # s_v, s_p = self.scale_fun(self.t)
             for o in self.objects:
                 o.scale_self(scale_v)
-
-
 
         # self.objects.append(Triangle((x, y), self.objects[3].ver_points_arr[1], self.objects[4].ver_points_arr[2]))
 
@@ -208,6 +206,13 @@ class RhombusFractal:
         x_t2, y_t2 = line_intersection(line_1, line_DA)
         x_t3, y_t3 = line_intersection(line_2, line_AB)
         x_t4, y_t4 = line_intersection(line_2, line_DC)
+
+
+        # for smaller sizes
+        # x_t1, y_t1 = x_t1 + 1, y_t1 - 1
+        # x_t2, y_t2 = x_t2 - 1, y_t2 + 1
+        # x_t3, y_t3 = x_t3 + 1, y_t3 - 1
+        # x_t4, y_t4 = x_t3 - 1, y_t3 + 1
 
         trapezoid_1 = np.array([[x, y], self.objects[3].ver_points_arr[1], [x_t1, y_t1],
                                 self.objects[4].ver_points_arr[2]])
@@ -261,11 +266,8 @@ class HorRhombusFractal(RhombusFractal):
         super().__init__(x, y, p_fun, q_fun, colorset)
 
     def update(self, ts):
-
         super().update(ts)
         self.rotate_self(pi / 2.)
 
     def draw(self, surface):
-
         super().draw(surface)
-
