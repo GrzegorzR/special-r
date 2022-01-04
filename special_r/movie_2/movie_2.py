@@ -1,6 +1,7 @@
 import math
 from math import sin, cos, pi
 import random
+import itertools
 
 import numpy as np
 import pygame
@@ -84,9 +85,10 @@ def scene_object_on_off():
 
 
 def scene_size_with_scale():
-    colorset = list(reversed(sorted(chinskie)))
+    colorset = chinskie
     # colorset = to_zdjecie
-    #random.shuffle(colorset)
+    random.seed(12)
+    random.shuffle(colorset)
     #colorset = chinskie
     # r = Rhombus(200, 200, 100, 200)
     x, y = 400, 400
@@ -94,25 +96,37 @@ def scene_size_with_scale():
     p_fun = lambda t: sin(t / 8) * 50 + 100
     q_fun = lambda t: sin(t / 4) * 100 + 300
     # p_fun = lambda t: 300
-    q_fun = lambda t: 600
-    p_fun = lambda t: 400
-    scale_time_fun = lambda t: ((sin(t/2) * 2 + 2), (500, 400))
-    scale_size_fun = create_linear_transition_fun(0., 1., 0, 40000)
+    q_fun = lambda t: 300
+    p_fun = lambda t: 200
+    f = create_transition_fun(1., 7.5, 0., 15, 1.)
+    #scale_time_fun = lambda t: ((cos(t/4) * 3. + 3.5), (400, 650))
+    scale_time_fun =lambda t: (f(t), (450, 450))
+    #scale_time_fun = None
 
-    rhombus_fractal = RhombusFractal(400, 400, p_fun, q_fun, colorset)
-    r2 = rhombus_fractal.get_objects_down()
-    r3 = []
-    for r in r2:
-        r3 += r.get_objects_down()
+    scale_size_fun = create_linear_transition_fun(0., 1., 0, 20000)
+    x_s = [150, 450, 750]
+    y_s = [100, 300, 500, 700]
+    rs_lvl_1 = []
 
-    rhombus_list = [rhombus_fractal] + r2 + r3
+    for x,y in itertools.product(x_s, y_s):
+        rs_lvl_1.append(RhombusFractal(x, y, p_fun, q_fun, colorset))
+
+
+    rs_lvl_2 = []
+    for r in rs_lvl_1:
+        rs_lvl_2 += r.get_objects_down()
+    rs_lvl_3 = []
+    for r in rs_lvl_2:
+        rs_lvl_3 += r.get_objects_down()
+
+    rhombus_list = rs_lvl_1 + rs_lvl_2 + rs_lvl_3
     for r in rhombus_list:
         r.scale_size_fun = scale_size_fun
         r.scale_time_fun = scale_time_fun
     s = Scene(rhombus_list, bg_color=colorset[1])
-    output_dir ='out/movie_2/scene_scale_1'
-    output_dir = None
-    s.animate(0.05, output_dir=output_dir, save_range=(0,1000))
+    output_dir ='out/movie_2/scene_scale_3'
+    #output_dir = None
+    s.animate(0.01, output_dir=output_dir, save_range=(0, 400))
 
 
 if __name__ == '__main__':

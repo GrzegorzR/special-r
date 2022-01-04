@@ -8,13 +8,15 @@ from pygame.locals import *
 class Scene:
     # takes Rects, and animations parameters
     # outputs animation as gif, series of png or live in window
-    def __init__(self, objects, img_size=(800, 800), bg_color=(255, 255, 255)):
+    def __init__(self, objects, img_size=(900, 800), bg_color=(255, 255, 255)):
         self.objects = objects
         self.img_size = img_size
         self.bg_col = bg_color
         self.c = 0
 
     def update_rule(self):
+        pass
+    def post_update_rule(self):
         pass
 
     def animate(self, dt=0, output_dir=None, fps=60, save_range=None):
@@ -31,7 +33,7 @@ class Scene:
         if not dt:
             dt = 1. / fps
 
-        clock = pygame.time.Clock()
+        #clock = pygame.time.Clock()
         if not output_dir:
             screen = pygame.display.set_mode(self.img_size)
         else:
@@ -49,7 +51,7 @@ class Scene:
             for r in self.objects:
                 r.update(dt)
                 r.draw(screen)
-
+            self.post_update_rule()
             self.c += 1
             if self.c > save_range[1]:
                 return
