@@ -1,6 +1,7 @@
 from math import cos, sin, pi
 import numpy as np
 from numpy import tanh
+import matplotlib.pyplot as plt
 
 
 def circle_clockwise(t):
@@ -16,13 +17,14 @@ class ParametricCircle:
         self.clockwise = clockwise
         self.phase = phase
         self.r_speed = r_speed
+
     def __call__(self, *args, **kwargs):
         t = args[0]
         if self.clockwise:
 
-            return sin(self.r_speed*t + self.phase)/10., cos(self.r_speed*t + self.phase)/10.
+            return sin(self.r_speed * t + self.phase) / 10., cos(self.r_speed * t + self.phase) / 10.
         else:
-            return sin(-(self.r_speed*t + self.phase))/10., cos(-(self.r_speed*t + self.phase))/10.
+            return sin(-(self.r_speed * t + self.phase)) / 10., cos(-(self.r_speed * t + self.phase)) / 10.
 
 
 class LissajousCurve:
@@ -34,7 +36,8 @@ class LissajousCurve:
 
     def __call__(self, *args, **kwargs):
         t = args[0]
-        return self.a * cos((t) * self.kx)/20, self.b * sin((t/2) * self.ky)/20
+        return self.a * cos((t) * self.kx) / 20, self.b * sin((t / 2) * self.ky) / 20
+
 
 class ParametricSegment:
     def __init__(self, a=1):
@@ -42,11 +45,12 @@ class ParametricSegment:
 
     def __call__(self, *args, **kwargs):
         t = args[0]
-        return self.a*sin(t), 0
+        return self.a * sin(t), 0
 
 
 def saw_function(t):
     signal.sawtooth(2 * np.pi * 5 * t)
+
 
 def create_transition_fun(v0, v1, t0, t1, slope_param=6.):
     # create smooth transition between values v0 and v1 in time t0 -> t1
@@ -58,14 +62,29 @@ def create_transition_fun(v0, v1, t0, t1, slope_param=6.):
 
     return out_fun
 
+def create_smooth_transition_fun(v0, v1, t0, t1, slope_param=6.):
+
+
+    # f(x) = (tanh((x - t0_1 - (t1_1 - t0_1) / 2) c / (t1_1 - t0_1)) + 1) / 2 (v1_1 - v0_1) + v0_1
+    def out(x):
+        if x < t0:
+            return v0
+        if x > t1:
+            return v1
+        v = (tanh((x - t0 - (t1 - t0) / 2.) * slope_param / (t1 - t0)) + 1) / 2 * (v1 - v0) + v0
+        return v
+
+    return out
+
 def create_linear_transition_fun(v0, v1, t0, t1):
     def out_fun(t):
         if t > t1:
             return v1
-        else:
-            a = (v1-v0)/(t1 - t0)
-            b = v0 - a*t0
-        return a*t + b
+        if t < t0:
+            return v0
+        a = (v1 - v0) / (t1 - t0)
+        b = v0 - a * t0
+        return a * t + b
 
     return out_fun
 
@@ -75,4 +94,26 @@ parametric_functions = {
     'counterclock': circle_counterclockwise
 }
 
+if __name__ == '__main__':
+    v0, v1 = 2, 11
+    t0, t1 = 0, 50
+    f1 = create_transition_fun(v0, v1, t0, t1)
+    f2 = create_smooth_transition_fun(v0, v1, t0, t1)
+    f3 = create_linear_transition_fun(v0, v1, t0, t1)
 
+    t = np.arange(t0 - 10, t1 + 10, 0.1)
+    v1 = np.array(list(map(f1, t)))
+    v2 = np.array(list(map(f2, t)))
+    v3 = np.array(list(map(f3, t)))
+
+
+
+    plt.gca().set_aspect('equal', adjustable='box')
+
+    plt.plot(t, v1)
+    plt.plot(t, v2)
+    plt.plot(t, v3)
+    plt.axvline(x=t0, c='red')
+    plt.axvline(x=t1, c='red')
+
+    plt.show()
