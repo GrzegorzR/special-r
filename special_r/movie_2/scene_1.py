@@ -42,9 +42,9 @@ def scene_1():
     x, y = 1960 / 2, 1080 / 2
     rhombus_list = []
     fun_q = lambda t: 400
-    fun_p2 = lambda t: cos((t * pi / 4)) * 90. + 200
+    fun_p2 = lambda t: -sin((t * pi *2)) * 90. + 200
     # fun_p2 = lambda t: pow(2, cos(t / 2 + (pi / 2.))) * 90. + 308
-    fun_p = lambda t: (sin((t * pi / 2))) * 90. + 300
+    fun_p = lambda t: (sin((t * pi *2))) * 90. + 300
 
     pos = get_rhombus_tiling_positions(x, y)
     # fun_reverse_in = [1,2,7,8,9,10]
@@ -63,13 +63,13 @@ def scene_1():
     output_dir = 'out/movie_2/scene_1'
 
 
-    output_dir = None
+    #output_dir = None
     files = glob.glob('{}/*'.format(output_dir))
 
     if output_dir:
         for f in files:
             os.remove(f)
-    s.animate(0.01, output_dir=output_dir, save_range=(0, 40 * 50))
+    s.animate(1/60, output_dir=output_dir, save_range=(0, 60*30))
 
 
 if __name__ == '__main__':

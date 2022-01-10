@@ -19,6 +19,7 @@ chinskie = ['#637353' ,'#D9C9BA' ,'#A64D2D' ,'#D9593D' ,'#D94436' ]
 white = Color('white')
 green = Color('green')
 
+gray = '#4e5052'
 
 def white_to_red(n):
     return [c.hex_l.upper() for c in white.range_to(red, n)]
