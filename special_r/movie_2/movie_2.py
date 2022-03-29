@@ -176,6 +176,7 @@ def scene_qp_change():
 
 
 if __name__ == '__main__':
+    pass
     # scene_object_on_off()
     # scene_size_with_scale()
     # scene_qp_change()

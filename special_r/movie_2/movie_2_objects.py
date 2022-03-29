@@ -103,7 +103,7 @@ class Triangle(Shape):
 
 
 class RhombusFractal:
-    def __init__(self, x, y, p_fun, q_fun, colorset):
+    def __init__(self, x, y, p_fun, q_fun, colorset, debug=False):
 
         self.x, self.y = x, y
         self.p_fun, self.q_fun = p_fun, q_fun
@@ -114,6 +114,8 @@ class RhombusFractal:
         # print(self.alpha)
         self.scale_time_fun = None
         self.scale_size_fun = None
+        self.translations_fun = None
+        self.debug = debug
 
         self.objects = []
 
@@ -172,23 +174,34 @@ class RhombusFractal:
         # if self.scale_fun:
         #    self.scale_self(self.scale_fun(self.t))
 
+
     def scale_self(self, v):
         for o in self.objects:
             o.scale_self(v)
-
-    def update_objects(self):
-        self.objects = []
-        self.update_rhombuses()
-        self.update_trapezoides()
-        self.update_triangles()
-
-        # print(asd)
+    def scale_time(self):
         if self.scale_time_fun:
             s_v, s_p = self.scale_time_fun(self.t)
             if s_p is None:
                 s_p = self.center()
             for o in self.objects:
                 o.scale(s_v, s_v, s_p[0], s_p[1])
+
+    def update_objects(self):
+        self.objects = []
+        if self.debug:
+            x, y, p, q = self.x, self.y, self.p, self.q
+            self.objects.append(Rhombus(x, y, p, q, self.colorset[2]))
+        else:
+            self.update_rhombuses()
+            self.update_trapezoides()
+            self.update_triangles()
+
+        # print(asd)
+        if self.translations_fun:
+            dx, dy = self.translations_fun(self.t)
+            for o in self.objects:
+                o.translation(dx, dy)
+        self.scale_time()
 
         # print(self.size(), scale_v)
         if self.scale_size_fun:

@@ -16,6 +16,8 @@ vienna_strips = ['#040FD9', '#0554F2', '#00C5D6', '#71FAA8', '#FF82BB']
 to_zdjecie = ['#04738C', '#77A632', '#F2EDA2', '#F2DABD', '#A67C6D']
 chinskie = ['#637353' ,'#D9C9BA' ,'#A64D2D' ,'#D9593D' ,'#D94436' ]
 
+colorset_little_sad_boy_aka_lsd = ['#D9C7C1', '#2C592A', '#F27C38', '#401201']
+
 white = Color('white')
 green = Color('green')
 

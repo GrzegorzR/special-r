@@ -13,9 +13,11 @@ class Scene:
         self.img_size = img_size
         self.bg_col = bg_color
         self.c = 0
+        self.t = 0
 
-    def update_rule(self):
+    def update_rule(self, dt=0.1):
         pass
+
     def post_update_rule(self):
         pass
 
@@ -41,13 +43,16 @@ class Scene:
 
         unpin_n = 0
         while True:
-            self.update_rule()
+            self.t += dt
+            self.update_rule(dt)
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
 
             self.update_bg(screen)
+            #self.update_objects(dt)
+            #self.draw_objects(screen)
             for r in self.objects:
                 r.update(dt)
                 r.draw(screen)
