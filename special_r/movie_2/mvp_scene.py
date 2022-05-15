@@ -1,3 +1,4 @@
+import random
 from copy import deepcopy
 from random import shuffle
 
@@ -7,7 +8,7 @@ from scipy.misc import derivative
 
 from special_r.Scene import Scene
 from special_r.movie_2.movie_2_objects import Shape
-from special_r.utils.colorsets import blue_crystal_vienna, colorset_little_sad_boy_aka_lsd
+from special_r.utils.colorsets import *
 from special_r.utils.parametric_functions import create_smooth_transition_fun, concatenate_functions
 
 
@@ -90,7 +91,7 @@ def get_single_tile(x, y, s, colorset):
     return shapes[1:]
 
 
-if __name__ == '__main__':
+def mvp_1():
     colors = colorset_little_sad_boy_aka_lsd
     # shuffle(colors)
     # x, y = 400, 400
@@ -103,32 +104,31 @@ if __name__ == '__main__':
         for y in range(5):
             shapes += get_single_tile(x * s * 2 + s, y * s * 2 * (1 / sqrt(3)) + (1 / sqrt(3)) * s, s, colors)
 
-
     # shapes += get_single_tile(x+400, y,s)
     # shapes += get_single_tile(x + 200, y-s*(1/sqrt(3)), s)
     class MvpRotScene(Scene):
 
         def __init__(self, objects, s, bg_color, img_size):
             super().__init__(objects, bg_color=bg_color, img_size=img_size)
-            #self.trans_functions = []
-            #for i in range(10):
+            # self.trans_functions = []
+            # for i in range(10):
             #    self.trans_functions.append(create_smooth_transition_fun(0, pi, (i * 5) + 1, (i + 1) * 5))
 
             self.trans_fun_1 = concatenate_functions([create_smooth_transition_fun(0, pi, 0, 5),
-                                                      create_smooth_transition_fun(pi, 2*pi, 29, 34)],
-                                                     [(0,10), (10,40)])
+                                                      create_smooth_transition_fun(pi, 2 * pi, 29, 34)],
+                                                     [(0, 10), (10, 40)])
 
             self.trans_fun_2 = concatenate_functions([create_smooth_transition_fun(0, pi, 4, 9),
-                                                      create_smooth_transition_fun(pi, 2*pi, 25, 30)],
-                                                      [(0, 10),(10, 40)])
+                                                      create_smooth_transition_fun(pi, 2 * pi, 25, 30)],
+                                                     [(0, 10), (10, 40)])
 
             self.trans_fun_3 = concatenate_functions([create_smooth_transition_fun(0, pi, 8, 13),
-                                                      create_smooth_transition_fun(pi, 2*pi, 21, 26)],
+                                                      create_smooth_transition_fun(pi, 2 * pi, 21, 26)],
                                                      [(0, 15), (15, 40)])
             self.trans_fun_4 = concatenate_functions([create_smooth_transition_fun(0, pi, 12, 17),
                                                       create_smooth_transition_fun(pi, 2 * pi, 17, 22)],
                                                      [(0, 17), (17, 50)])
-            #self.trans_fun_4 =create_smooth_transition_fun(0, 2*pi, 12, 22)
+            # self.trans_fun_4 =create_smooth_transition_fun(0, 2*pi, 12, 22)
             max_dist = 50
             point = np.array([200, 216])
             for s in self.objects:
@@ -162,11 +162,95 @@ if __name__ == '__main__':
                     s.rotate(derivative(self.trans_fun_3, self.t) * dt, rot_point_3)
                 if dist4 < max_dist:
                     s.rotate(derivative(self.trans_fun_4, self.t) * dt, rot_point_4)
-                #if dist5 < max_dist:
+                # if dist5 < max_dist:
                 #    s.rotate(derivative(self.trans_fun_4, self.t) * dt, rot_point_5)
             # if self.t >5:
 
-
     dt = 0.05
     s = MvpRotScene(shapes, s, bg_color=colors[0], img_size=(s * 4, s * 4))
-    s.animate(dt=dt, save_range=(0, 40 / dt), output_dir='out/movie_2/rot_scene')
+    out_dir = 'out/movie_2/rot_scene'
+    s.animate(dt=dt, save_range=(0, 40 / dt), output_dir=None)
+
+
+if __name__ == '__main__':
+    colors = colorset_little_sad_boy_aka_lsd
+    colors = blue_crystal_vienna
+    random.shuffle(colors)
+    # shuffle(colors)
+    # x, y = 400, 400
+    s = 100.
+    shapes = []
+    centers_1, centers_2 = [[] for _ in range(7)], [[] for _ in range(7)]
+    all_centers = [[] for _ in range(24)]
+    for x in range(24):
+        for y in range(24):
+            all_centers[x].append(np.array([x * s, y * s  * (1 / sqrt(3))]))
+
+
+    center_fun_mapping = {}
+
+    for i in range(12):
+        center_fun_mapping[i] = ((i + 1, i + 2), )
+
+    for x in range(7):
+        for y in range(12):
+            centers_1[x].append((x * s * 2, y * s * 2 * (1 / sqrt(3)) + (1 / sqrt(3)) * s))
+            shapes += get_single_tile(x * s * 2, y * s * 2 * (1 / sqrt(3)), s, colors)
+    for x in range(7):
+        for y in range(12):
+            centers_2[x].append((x * s * 2 + s, y * s * 2 * (1 / sqrt(3)) + (1 / sqrt(3)) * s))
+            shapes += get_single_tile(x * s * 2 + s, y * s * 2 * (1 / sqrt(3)) + (1 / sqrt(3)) * s, s, colors)
+
+
+    class MvpRotScene(Scene):
+
+        def __init__(self, objects, s, bg_color, img_size):
+            super().__init__(objects, bg_color=bg_color, img_size=img_size)
+            self.s = s
+            self.trans_functions = []
+
+            for i in range(12):
+                print((i * 5) , (i + 1) * 5 +1)
+                self.trans_functions.append(create_smooth_transition_fun(0, pi, (i * 5) , (i + 1) * 5+1))
+
+            self.objects_fun_mapping = [[] for _ in range(len(self.trans_functions))]
+
+            max_dist = (s / sqrt(3))
+            for i in range(len(center_fun_mapping)):
+                for center_ind in center_fun_mapping[i]:
+
+                    center = all_centers[center_ind[0]][center_ind[1]]
+                    for obj_ind, obj in enumerate(self.objects):
+                        dist = np.linalg.norm(center - obj.centroid())
+                        if dist < max_dist:
+                            self.objects_fun_mapping[i].append((obj_ind, center))
+
+            # for obj_ind, obj in enumerate(self.objects):
+            #    for center in centers_1:
+            #        for i, c in enumerate(center):
+            #            dist = np.linalg.norm(np.array(c) - obj.centroid())
+            #            if dist < max_dist:
+            #                self.objects_fun_mapping[i].append((obj_ind, c))
+
+        def update_rule(self, dt=0.1):
+            for i, trans_fun in enumerate(self.trans_functions):
+                for obj_index, center in self.objects_fun_mapping[i]:
+                    # print(i, obj_index)
+                    self.objects[obj_index].rotate(derivative(self.trans_functions[i], self.t) * dt, np.array(center))
+
+            # for s in self.objects:
+            #    for center in centers_1:
+            #        for i, c in enumerate(center):
+            #            dist = np.linalg.norm(np.array(c) - s.centroid())
+
+
+    #
+    #            if dist < max_dist:
+    #                # shapes_to_rotation.append(s)
+    #                s.rotate(derivative(self.trans_functions[i], self.t) * dt, c)
+
+    dt = 0.1
+    s = MvpRotScene(shapes, s, bg_color=colors[0], img_size=(1200, 1200))
+    out_dir = 'out/movie_2/rot_scene_3'
+    out_dir = None
+    s.animate(dt=dt, save_range=(0, 120. / dt), output_dir=out_dir)
