@@ -1,4 +1,5 @@
 import random
+import sys
 from copy import deepcopy
 from random import shuffle
 
@@ -173,6 +174,13 @@ def mvp_1():
 
 
 if __name__ == '__main__':
+    seed = random.randrange(sys.maxsize)
+    rng = random.Random(seed)
+
+    print("Seed was:", seed)
+
+    seed = 7032126901735480853
+    random.seed(seed)
     colors = colorset_little_sad_boy_aka_lsd
     colors = blue_crystal_vienna
     random.shuffle(colors)
@@ -184,13 +192,13 @@ if __name__ == '__main__':
     all_centers = [[] for _ in range(24)]
     for x in range(24):
         for y in range(24):
-            all_centers[x].append(np.array([x * s, y * s  * (1 / sqrt(3))]))
+            all_centers[x].append(np.array([(x-1) * s, (y-1) * s  * (1 / sqrt(3))]))
 
 
     center_fun_mapping = {}
 
     for i in range(12):
-        center_fun_mapping[i] = ((i + 1, i + 2), )
+        center_fun_mapping[i] = ((i + 1, i -10),(i + 1, i -6),(i + 1, i -2), (i + 1, i + 2),  (i + 1, i + 6), (i + 1, i + 10))
 
     for x in range(7):
         for y in range(12):
@@ -210,8 +218,9 @@ if __name__ == '__main__':
             self.trans_functions = []
 
             for i in range(12):
-                print((i * 5) , (i + 1) * 5 +1)
-                self.trans_functions.append(create_smooth_transition_fun(0, pi, (i * 5) , (i + 1) * 5+1))
+                t0, t1 = (i * 5)-2 , (i + 1) * 5 +5
+                print(t0, t1)
+                self.trans_functions.append(create_smooth_transition_fun(0, pi, t0, t1))
 
             self.objects_fun_mapping = [[] for _ in range(len(self.trans_functions))]
 
@@ -249,8 +258,8 @@ if __name__ == '__main__':
     #                # shapes_to_rotation.append(s)
     #                s.rotate(derivative(self.trans_functions[i], self.t) * dt, c)
 
-    dt = 0.1
+    dt = 0.05
     s = MvpRotScene(shapes, s, bg_color=colors[0], img_size=(1200, 1200))
-    out_dir = 'out/movie_2/rot_scene_3'
-    out_dir = None
-    s.animate(dt=dt, save_range=(0, 120. / dt), output_dir=out_dir)
+    out_dir = 'out/movie_2/rot_scene_4'
+    #out_dir = None
+    s.animate(dt=dt, save_range=(0, 80. / dt), output_dir=out_dir)
