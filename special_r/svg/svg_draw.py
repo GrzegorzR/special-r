@@ -1,5 +1,5 @@
 import drawSvg as draw
-
+from pyaxidraw import axidraw
 
 def add_roz(surface, x, y, s):
     rot_x, rot_y = x+(s/2), -y -(s/2)
@@ -22,6 +22,11 @@ def draw_roz(scale, name):
     #d.saveSvg('{}.svg'.format(name))
     d.savePng('out/{}.png'.format(name))
 
+def print_svg(svg_file):
+
+    ad = axidraw.AxiDraw()
+    ad.plot_setup(svg_file)
+    ad.plot_run()
 
 
 if __name__ == '__main__':
