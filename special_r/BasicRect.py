@@ -96,3 +96,4 @@ class BasicRect:
         # pygame.draw.circle(surface, (247, 122, 59), (points_tmp[0][0], points_tmp[0][1]), 4)
 
         # pygame.draw.circle(surface, GREEN, (points_tmp[2][0], points_tmp[2][1]), 2)
+
