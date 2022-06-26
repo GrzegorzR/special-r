@@ -13,9 +13,6 @@ class Transformation:
         return res
 
 
-
-
-
 class Rotation(Transformation):
     def __init__(self, r, x, y):
         self.r, self.x, self.y = r, x, y
@@ -23,11 +20,16 @@ class Rotation(Transformation):
         super().__init__(trans_str)
 
 
-
 class Translation(Transformation):
     def __init__(self, x, y):
-        self.x, self.y =x, y
+        self.x, self.y = x, y
         trans_str = 'translate({}, {}) '.format(str(self.x), str(self.y))
+        super().__init__(trans_str)
+
+
+class Glide(Transformation):
+    def __init__(self):
+        trans_str = 'matrix(-1 0 0 -1 0 0) '
         super().__init__(trans_str)
 
 
@@ -36,5 +38,3 @@ class TransChain(Transformation):
         trans_str = ''.join([t.trans_str for t in transforms])
 
         super().__init__(trans_str)
-
-
