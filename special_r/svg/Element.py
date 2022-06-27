@@ -3,7 +3,7 @@ import copy
 import drawSvg as draw
 
 from special_r.svg.Transformation import *
-from special_r.svg.shapes import blob_svg
+from special_r.svg.shapes import *
 
 
 class Element(object):
@@ -53,7 +53,7 @@ if __name__ == '__main__':
 
     d = draw.Drawing(900, 900, origin='center', displayInline=False)
     rotations = [TransChain([Rotation(i*45, 0, 0), Translation(20,10)]) for i in range(0,8)]
-    elem = Element(blob_svg)
+    elem = Element(t_svg)
     motif = Motif(elem, rotations)
     translations = [Translation(x*200, y*200) for x in range(-5,5) for y in range(-5, 5)]
     motif2 = Motif(motif, translations)
