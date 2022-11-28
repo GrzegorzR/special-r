@@ -7,7 +7,7 @@ from special_r.svg.Transformation import *
 from special_r.svg.Element import Element, Motif
 
 
-G_svg = draw.Text('G', 60 , 0, 0)
+G_svg = draw.Text('G', 60 , 0, 0, style='font-family:sans serif')
 R_svg = draw.Text('R', 500 , 0, 0)
 #W, H = 1920, 1080
 W, H = 1080, 1920
@@ -25,6 +25,7 @@ def animate_order(order_n, svg_elem, x_p, y_p, out_dir):
     for i in range(iters):
         print(i)
         sur = draw.Drawing(W, H, origin='center', displayInline=False)
+        #sur.g(style="font-family:sans serif;")
         sur.append(draw.Rectangle(-W / 2, -H / 2, W, H, fill='green'))
         sur.append(draw.Circle(rot.x, rot.y, 5, fill="#8C0303"))
         for n in range(order_n):
