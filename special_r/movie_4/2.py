@@ -11,6 +11,8 @@ f_svg = draw.Text('G', 100 , 0, 0)
 
 
 def main(out_dir='out/2/1'):
+    if not os.path.exists(out_dir):
+        os.makedirs(out_dir)
 
     x_p, y_p = 0, 0
     single_line = True
