@@ -8,11 +8,11 @@ from special_r.svg.Transformation import *
 from special_r.svg.Element import Element, Motif
 
 
-f_svg = draw.Text('R', 500 , 0, 0)
+f_svg = draw.Text('G', 250 , 0, 0)
 
 
-#W, H = 1920, 1080
-W, H = 1080, 1920
+W, H = 1920*2, 1080*2
+#W, H = 1080, 1920
 
 def main(out_dir):
     if not os.path.exists(out_dir):
@@ -20,7 +20,7 @@ def main(out_dir):
 
     x_p, y_p = 0, 0
 
-    iters = 240
+    iters = 240*4
     elem = Element(f_svg)
 
 
@@ -43,5 +43,6 @@ if __name__ == '__main__':
     #out_dir = 'out/1/vertical'
     #main(out_dir)
 
-    out_dir = 'out/1/vertical_out'
-    scene_vertical_out(out_dir, iters)
+    out_dir = 'out/1/1'
+    main(out_dir)
+    #iscene_vertical_out(out_dir, iters)
